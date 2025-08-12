@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Los 10 Errores Financieros – Landing</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>:root{--brand:#006447;}.brand-bg{background:var(--brand)}</style></head>
+<style>:root{--brand:#006447;}.brand-bg{background:var(--brand)}</style>
+</head>
 <body class="bg-neutral-50">
 <main class="max-w-3xl mx-auto px-4 py-10">
   <h1 class="text-3xl font-extrabold">Descarga la guía GRATIS</h1>
   <p class="mt-2 text-neutral-700">Los 10 errores financieros que ponen en riesgo la supervivencia de las PyMEs en México.</p>
-  <form class="mt-6 space-y-4" action="https://formspree.io/f/myzpokbp" method="POST">
-    <input type="hidden" name="_redirect" value="https://igenraes.github.io/landing-pymes/gracias.html">
+
+  <form id="leadForm" class="mt-6 space-y-4" action="https://formspree.io/f/myzpokbp" method="POST">
+    <!-- Redirección server-side (si Formspree la respeta) -->
+    <input type="hidden" name="_redirect" value="gracias.html">
     <div><label class="text-sm font-medium">Nombre completo</label><input name="nombre" required class="w-full border rounded-xl px-3 py-2"></div>
     <div><label class="text-sm font-medium">Email</label><input name="email" type="email" required class="w-full border rounded-xl px-3 py-2"></div>
     <div><label class="text-sm font-medium">Teléfono</label><input name="telefono" type="tel" required class="w-full border rounded-xl px-3 py-2"></div>
@@ -21,6 +27,37 @@
     </div>
     <div class="text-sm"><input type="checkbox" required> Acepto ser contactado(a) y la política de privacidad.</div>
     <button class="brand-bg text-white px-6 py-3 rounded-xl font-semibold">Descargar PDF</button>
+    <noscript><p class="text-xs text-red-700 mt-2">Activa JavaScript para completar el envío y la redirección automática.</p></noscript>
+    <p id="formMsg" class="hidden text-sm mt-2"></p>
   </form>
+
   <p class="mt-6 text-sm text-neutral-600">¿Tienes prisa? <a class="underline" href="https://wa.me/522218486053?text=Hola%20quiero%20la%20guia">Escríbenos por WhatsApp</a></p>
-</main></body></html>
+</main>
+
+<script>
+// Envío AJAX a Formspree + redirección controlada
+const form = document.getElementById('leadForm');
+const msg = document.getElementById('formMsg');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = new FormData(form);
+  try {
+    const resp = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (resp.ok) {
+      window.location.href = 'gracias.html';
+    } else {
+      msg.textContent = 'Hubo un problema al enviar el formulario. Intenta nuevamente.';
+      msg.className = 'text-red-700 text-sm mt-2';
+    }
+  } catch (err) {
+    msg.textContent = 'Error de red. Revisa tu conexión e intenta de nuevo.';
+    msg.className = 'text-red-700 text-sm mt-2';
+  }
+});
+</script>
+</body>
+</html>
